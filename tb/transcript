@@ -1,0 +1,57 @@
+# do make.do
+# 
+# 
+# vlib work
+# ** Warning: (vlib-34) Library already exists at "work".
+# 
+# vlog -sv ../src/bit_population_counter.sv
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 15:37:07 on Aug 13,2019
+# vlog -reportprogress 300 -sv ../src/bit_population_counter.sv 
+# -- Compiling module bit_population_counter
+# 
+# Top level modules:
+# 	bit_population_counter
+# End time: 15:37:07 on Aug 13,2019, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv ./bit_population_counter_tb.sv
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 15:37:07 on Aug 13,2019
+# vlog -reportprogress 300 -sv ./bit_population_counter_tb.sv 
+# -- Compiling module bit_population_counter_tb
+# 
+# Top level modules:
+# 	bit_population_counter_tb
+# End time: 15:37:07 on Aug 13,2019, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -novopt bit_population_counter_tb 
+# vsim -novopt bit_population_counter_tb 
+# Start time: 15:37:07 on Aug 13,2019
+# Loading sv_std.std
+# Loading work.bit_population_counter_tb
+# Loading work.bit_population_counter
+# 
+# add wave /bit_population_counter_tb/clk
+# add wave /bit_population_counter_tb/rst
+# add wave /bit_population_counter_tb/cmd_valid_i
+# add wave /bit_population_counter_tb/cmd_data_i
+# add wave /bit_population_counter_tb/data_valid_o
+# add wave -radix decimal /bit_population_counter_tb/data_o
+# add wave /bit_population_counter_tb/data_i_count
+# 
+# 
+# 
+# run -all
+# Running testbench!
+# 
+# Testing setups and resets
+# Testing set number of units- OK!
+# 
+# Set and reset are working!
+# ----------------------------------------------
+# 
+# Everything is fine!
+# ** Note: $stop    : ./bit_population_counter_tb.sv(148)
+#    Time: 2010 ps  Iteration: 1  Instance: /bit_population_counter_tb
+# Break in Module bit_population_counter_tb at ./bit_population_counter_tb.sv line 148

@@ -1,0 +1,151 @@
+module bit_population_counter_tb;
+
+parameter WIDTH = 32;
+
+logic                       clk;
+logic                       rst;
+
+logic                       cmd_valid_i;
+logic             [ (WIDTH - 1 ):0] cmd_data_i;
+ 
+logic                       data_valid_o;
+logic [($clog2(WIDTH)+1):0] data_o;
+
+
+logic [($clog2(WIDTH)+1):0] data_i_count;
+
+bit [($clog2(WIDTH)+1):0] rand_numb_unit;
+
+bit_population_counter 
+  bit_population_counter_dut     (
+  .clk_i       ( clk          ),
+  .srst_i      ( rst          ),
+  
+  .data_val_i  ( cmd_valid_i  ),
+  .data_i      ( cmd_data_i   ),
+  
+  .data_val_o  ( data_valid_o ),
+  .data_o      ( data_o       )
+);
+
+task automatic clk_gen;
+
+  forever
+    begin
+      #5;
+      clk <= ~clk;
+    end
+  
+endtask
+
+task automatic apply_rst;
+
+  rst <= 1'b1;
+  @( posedge clk );
+  rst <= 1'b0;
+  @( posedge clk );
+
+endtask
+
+task automatic send_cmd;
+  input [ (WIDTH - 1 ):0] cmd_data;
+ 
+  
+  begin
+    cmd_data_i  <= cmd_data;
+  end
+endtask
+
+task automatic check_set_reset;
+  bit [(WIDTH - 1 ):0]    cmd_data;
+  bit [WIDTH:0] rand_numb_unit;
+
+  
+  $write("Testing set number of units- ");
+  for( int i = 0; i < 100; i++ )
+    begin
+      rand_numb_unit = $urandom_range(WIDTH, 0);
+      cmd_data = 2**(rand_numb_unit) - 1;
+	  cmd_valid_i = |cmd_data;
+	  send_cmd(cmd_data);
+     // send_cmd(cmd_data);
+      @( posedge clk );
+            
+      if( data_o != rand_numb_unit )
+        begin
+          $display("The number of units did not match!");
+		  $display($time);
+          //$stop();
+        end
+      cmd_data = 0;
+    end
+  $display("OK!");
+  
+/*  $write("Testing reset time - ");
+  send_cmd(cmd_data, RESET_TIME);
+  @( negedge clk );      
+  @( negedge clk ); 
+      
+  if( milliseconds_o != 0 )
+    begin
+      $display("Milliseconds didn't reset!");
+      $stop();
+    end
+  else if( seconds_o != 0 )
+    begin
+      $display("Seconds didn't reset!");
+      $stop();
+    end
+  else if( minutes_o != 0 )
+    begin
+      $display("Minutes didn't reset!");
+      $stop();
+    end
+  else if( hours_o != 0 )
+    begin
+      $display("Hours didn't reset!");
+      $stop();
+    end
+  cmd_data = 0;
+  
+  $display("OK!");*/
+  
+endtask
+
+initial
+  begin
+    clk <= '0;
+    rst <= '0;
+    
+    fork
+      clk_gen();
+    join_none
+    
+    apply_rst();
+    
+    $display("Running testbench!");
+    
+    /*$display("\n----------------------------------------------");
+    $display("Testing normal clock functionning. It might take a couple of minutes!");
+    fork
+      check_ms_proc();
+      check_s_proc();
+      check_min_proc();
+      check_hr_proc();
+    join
+    $display("Clock is working!");
+    $display("----------------------------------------------");*/
+    
+    $display("\nTesting setups and resets");
+    fork
+      check_set_reset();
+    join
+    $display("\nSet and reset are working!");
+    $display("----------------------------------------------");
+    
+    $display("\nEverything is fine!");
+    $stop();
+  end
+
+
+endmodule
